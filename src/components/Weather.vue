@@ -43,7 +43,7 @@
       </div>
 
       <!-- show conditions -->
-      <div id="render_conditions">
+      <div id="render_conditions" v-if="selected_osm_location != null">
 
         <!-- conditions table -->
         <div class="row">
@@ -51,11 +51,11 @@
             <table class="table">
               <tr>
                 <th>Temperature</th>
-                <td></td>
+                <td>{{observations.currently.apparentTemperature}}</td>
               </tr>
               <tr>
                 <th>Humidity</th>
-                <td></td>
+                <td>{{observations.currently.humidity}}</td>
               </tr>
             </table>
           </div>
@@ -63,11 +63,11 @@
             <table class="table">
               <tr>
                 <th>Pressure</th>
-                <td></td>
+                <td>{{observations.currently.pressure}}</td>
               </tr>
               <tr>
-                <th>Something else</th>
-                <td></td>
+                <th>wind Gusts</th>
+                <td>{{observations.currently.windGust}}</td>
               </tr>
             </table>
           </div>
@@ -101,6 +101,7 @@
         selected_osm_location: null,
         lat: undefined,
         lon: undefined,
+        observations: undefined
       }
     },
     methods: {
@@ -167,8 +168,18 @@
 
       get_conditions: function () {
 
+        // set self for then context
+        var self = this;
+
         // query darksky.net api
         // https://api.darksky.net/forecast/ab39481591505f01b53e976e1081f4d6/42.2410562,-83.613055
+        // temporary hack, using this proxy for DarkSky API
+        // https://csm.fusioncharts.com/files/assets/wb/wb-data.php?src=darksky&lat=40.7128&long=83.613
+
+        $.get(`https://csm.fusioncharts.com/files/assets/wb/wb-data.php?src=darksky&lat=${this.lat}&long=${this.lon}`)
+          .then(function(data){
+            self.observations = JSON.parse(data);
+          });
 
       }
     }
