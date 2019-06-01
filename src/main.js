@@ -11,9 +11,12 @@ Vue.use(BootstrapVue)
 Vue.config.productionTip = false
 
 /* eslint-disable no-new */
-new Vue({
+let vm = new Vue({
   el: '#app',
   router,
   template: '<App/>',
   components: { App }
 })
+
+/* jQuery */
+window.$ = window.jQuery = require('jquery');
