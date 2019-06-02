@@ -30,7 +30,7 @@
         <div class="col-md-8">
           <h3 v-if="selected_osm_location != undefined"><code>{{ selected_osm_location.display_name }} ({{ lat }}, {{ lon }})</code></h3>
         </div>
-        <div class="col-md-4">
+        <div v-if="osm_location_disambiguate" class="col-md-4">
           <h3 v-if="search_term != ''">Search term: <code>{{ search_term }}</code></h3>
           <template v-if="osm_location_disambiguate && search_term != ''">
             <ul>
@@ -76,7 +76,7 @@
         <!-- rainviewer -->
         <div class="row">
           <div class="col-md-12">
-            <iframe id="rainviewer_iframe" v-bind:src="'https://www.rainviewer.com/map.html?loc=' + lat + ',' + lon + ',7&oFa=0&oC=0&oU=0&oCS=0&oF=1&oAP=0&rmt=3&c=5&o=70&lm=0&th=1&sm=0&sn=1'" width="100%" frameborder="0" style="border:0;height:50vh;" allowfullscreen></iframe>
+            <iframe id="rainviewer_iframe" v-bind:src="'https://www.rainviewer.com/map.html?loc=' + lat + ',' + lon + ',7&oFa=0&oC=0&oU=0&oCS=0&oF=1&oAP=0&rmt=3&c=5&o=50&lm=0&th=1&sm=0&sn=1'" width="100%" frameborder="0" style="border:0;height:50vh;" allowfullscreen></iframe>
           </div>
         </div>
 
