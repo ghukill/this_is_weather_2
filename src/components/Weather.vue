@@ -28,7 +28,7 @@
 
       <div class="row">
         <div class="col-md-8">
-          <h3 v-if="selected_osm_location != undefined"><code>{{ selected_osm_location.display_name }} ({{ lat }}, {{ lon }})</code></h3>
+          <h3 v-if="selected_osm_location != undefined">{{ selected_osm_location.display_name }} ({{ lat }}, {{ lon }})</h3>
         </div>
         <div v-if="osm_location_disambiguate" class="col-md-4">
           <h3 v-if="search_term != ''">Search term: <code>{{ search_term }}</code></h3>
@@ -46,30 +46,36 @@
       <div id="render_conditions" v-if="selected_osm_location != null">
 
         <!-- conditions table -->
+<!--        <div class="row">-->
+<!--          <div class="col-md-6">-->
+<!--            <table class="table">-->
+<!--              <tr>-->
+<!--                <th>Temperature</th>-->
+<!--                <td>{{observations.currently.apparentTemperature}}</td>-->
+<!--              </tr>-->
+<!--              <tr>-->
+<!--                <th>Humidity</th>-->
+<!--                <td>{{observations.currently.humidity}}</td>-->
+<!--              </tr>-->
+<!--            </table>-->
+<!--          </div>-->
+<!--          <div class="col-md-6">-->
+<!--            <table class="table">-->
+<!--              <tr>-->
+<!--                <th>Pressure</th>-->
+<!--                <td>{{observations.currently.pressure}}</td>-->
+<!--              </tr>-->
+<!--              <tr>-->
+<!--                <th>wind Gusts</th>-->
+<!--                <td>{{observations.currently.windGust}}</td>-->
+<!--              </tr>-->
+<!--            </table>-->
+<!--          </div>-->
+<!--        </div>-->
+
         <div class="row">
-          <div class="col-md-6">
-            <table class="table">
-              <tr>
-                <th>Temperature</th>
-                <td>{{observations.currently.apparentTemperature}}</td>
-              </tr>
-              <tr>
-                <th>Humidity</th>
-                <td>{{observations.currently.humidity}}</td>
-              </tr>
-            </table>
-          </div>
-          <div class="col-md-6">
-            <table class="table">
-              <tr>
-                <th>Pressure</th>
-                <td>{{observations.currently.pressure}}</td>
-              </tr>
-              <tr>
-                <th>wind Gusts</th>
-                <td>{{observations.currently.windGust}}</td>
-              </tr>
-            </table>
+          <div class="col-md-12">
+            <code>{{observations.currently}}</code>
           </div>
         </div>
 
