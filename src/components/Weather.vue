@@ -85,7 +85,22 @@
 
         <div class="row">
           <div class="col-md-12">
-            <line-chart :line_data="line_data"></line-chart>
+            <h2>Hourly Temperature</h2>
+            <line-chart :line_data="line_data('temperature')"></line-chart>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-12">
+            <h2>Hourly Humidity</h2>
+            <line-chart :line_data="line_data('humidity')"></line-chart>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-12">
+            <h2>Hourly Pressure</h2>
+            <line-chart :line_data="line_data('pressure')"></line-chart>
           </div>
         </div>
 
@@ -101,9 +116,8 @@
 <script>
 
   // function to convert epoch to hour
-  function hour_from_epoch(t) {
-    let d = new Date(t);
-    return d.getHours();
+  function human_time_from_epoch(t) {
+    return new Date(t * 1000).toLocaleString()
   }
 
   // import components
@@ -123,15 +137,25 @@
       }
     },
     computed:{
-      line_data: function() {
-        let line_data = this.observations.hourly.data.map(x => ({label:hour_from_epoch(x.time), value:x.apparentTemperature}) );
-        return line_data;
-      }
+      // line_data: function(temperature) {
+      //   let line_data = this.observations.hourly.data.map(x => ({
+      //     label:human_time_from_epoch(x.time),
+      //     value:x.temperature
+      //   }));
+      //   return line_data;
+      // }
     },
     components:{
       'line-chart':LineChart
     },
     methods: {
+      line_data: function(observation) {
+        let line_data = this.observations.hourly.data.map(x => ({
+          label:human_time_from_epoch(x.time),
+          value:x[observation]
+        }));
+        return line_data;
+      },
       use_current_location: function() {
 
         // get position

@@ -9,9 +9,6 @@
       this.renderLineChart();
     },
     computed: {
-      // chartData: function() {
-      //   return this.line_data;
-      // }
       labelData: function() {
         return this.line_data.map(x => x.label);
       },
@@ -26,8 +23,10 @@
             labels: this.labelData,
             datasets: [
               {
-                label: "Data One",
+                label: "Temperature",
+                fill: false,
                 backgroundColor: "#f87979",
+                borderColor: "#f87979",
                 data: this.valueData
               }
             ]
