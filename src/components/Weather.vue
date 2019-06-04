@@ -27,12 +27,9 @@
     <div role="main" class="container">
 
       <div class="row">
-        <div class="col-md-8">
-          <h3 v-if="selected_osm_location != undefined">{{ selected_osm_location.display_name }} ({{ lat }}, {{ lon }})</h3>
-        </div>
-        <div v-if="osm_location_disambiguate" class="col-md-4">
-          <h3 v-if="search_term != ''">Search term: <code>{{ search_term }}</code></h3>
-          <template v-if="osm_location_disambiguate && search_term != ''">
+        <div class="col-md-12">
+          <template v-if="osm_location_disambiguate">
+            <h3 v-if="search_term != ''">Search term: <code>{{ search_term }}</code></h3>
             <ul>
               <li v-for="location in osm_locations">
                 <a v-on:click.prevent="select_location(location)" href="">{{ location.display_name }}</a>
@@ -42,40 +39,40 @@
         </div>
       </div>
 
-      <!-- show conditions -->
-      <div id="render_conditions" v-if="selected_osm_location != null">
+      <div class="row">
+        <div class="col-md-8">
+          <h3 v-if="selected_osm_location != undefined">{{ selected_osm_location.display_name }} ({{ lat }}, {{ lon }})</h3>
+        </div>
 
-        <!-- conditions table -->
-<!--        <div class="row">-->
-<!--          <div class="col-md-6">-->
-<!--            <table class="table">-->
-<!--              <tr>-->
-<!--                <th>Temperature</th>-->
-<!--                <td>{{observations.currently.apparentTemperature}}</td>-->
-<!--              </tr>-->
-<!--              <tr>-->
-<!--                <th>Humidity</th>-->
-<!--                <td>{{observations.currently.humidity}}</td>-->
-<!--              </tr>-->
-<!--            </table>-->
-<!--          </div>-->
-<!--          <div class="col-md-6">-->
-<!--            <table class="table">-->
-<!--              <tr>-->
-<!--                <th>Pressure</th>-->
-<!--                <td>{{observations.currently.pressure}}</td>-->
-<!--              </tr>-->
-<!--              <tr>-->
-<!--                <th>wind Gusts</th>-->
-<!--                <td>{{observations.currently.windGust}}</td>-->
-<!--              </tr>-->
-<!--            </table>-->
-<!--          </div>-->
-<!--        </div>-->
+      </div>
+
+      <!-- show conditions -->
+      <div id="render_conditions" v-if="selected_osm_location != null && observations != undefined">
 
         <div class="row">
-          <div class="col-md-12">
-            <code>{{observations.currently}}</code>
+          <div class="col-md-6">
+            <table class="table">
+              <tr>
+                <th>Temperature</th>
+                <td class="reading">{{observations.currently.apparentTemperature}}&#176; F</td>
+              </tr>
+              <tr>
+                <th>Humidity</th>
+                <td class="reading">{{observations.currently.humidity * 100}}%</td>
+              </tr>
+            </table>
+          </div>
+          <div class="col-md-6">
+            <table class="table">
+              <tr>
+                <th>Pressure</th>
+                <td class="reading">{{observations.currently.pressure}} mbar</td>
+              </tr>
+              <tr>
+                <th>wind Gusts</th>
+                <td class="reading">{{observations.currently.windGust}} mph</td>
+              </tr>
+            </table>
           </div>
         </div>
 
@@ -83,6 +80,12 @@
         <div class="row">
           <div class="col-md-12">
             <iframe id="rainviewer_iframe" v-bind:src="'https://www.rainviewer.com/map.html?loc=' + lat + ',' + lon + ',7&oFa=0&oC=0&oU=0&oCS=0&oF=1&oAP=0&rmt=3&c=5&o=50&lm=0&th=1&sm=0&sn=1'" width="100%" frameborder="0" style="border:0;height:50vh;" allowfullscreen></iframe>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-12">
+            <line-chart :line_data="line_data"></line-chart>
           </div>
         </div>
 
@@ -96,9 +99,18 @@
 </template>
 
 <script>
+
+  // function to convert epoch to hour
+  function hour_from_epoch(t) {
+    let d = new Date(t);
+    return d.getHours();
+  }
+
+  // import components
+  import LineChart from './LineChart.vue'
+
   export default {
     name: 'weather',
-    // props: ['search_term'],
     data () {
       return {
         search_term: '',
@@ -109,6 +121,15 @@
         lon: undefined,
         observations: undefined
       }
+    },
+    computed:{
+      line_data: function() {
+        let line_data = this.observations.hourly.data.map(x => ({label:hour_from_epoch(x.time), value:x.apparentTemperature}) );
+        return line_data;
+      }
+    },
+    components:{
+      'line-chart':LineChart
     },
     methods: {
       use_current_location: function() {
@@ -160,6 +181,9 @@
 
       select_location: function (location){
 
+        // set disambiguation flag to false
+        this.osm_location_disambiguate = false;
+
         // set selected location
         this.selected_osm_location = location;
 
@@ -191,6 +215,8 @@
     }
   }
 
+
+
   /**
    * Client for OpenStreetMaps (OSM) Nomination tool
    *
@@ -211,6 +237,8 @@
     }
 
   }
+
+
 
 </script>
 
